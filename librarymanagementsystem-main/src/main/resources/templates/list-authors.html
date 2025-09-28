@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>所有作者</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #f9d423 0%, #ff4e50 100%);
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-dark, .btn-info {
+            border-radius: 5px;
+        }
+        .btn-dark:hover, .btn-info:hover {
+            background: #ff8563;
+        }
+        h2 {
+            color: #ff6f61;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .table {
+            background: #fff;
+        }
+        .pagination a {
+            color: #ff6f61;
+            margin: 0 5px;
+        }
+        .pagination a.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="comman/header :: header"></div>
+    <div class="container my-2">
+        <div th:switch="${authors}" class="container my-5">
+            <p class="my-5 text-center">
+                <a href="/addAuthor" class="btn btn-dark"> 
+                    <i class="fas fa-user-plus ml-2"> 新增作者 </i>
+                </a>&nbsp;&nbsp;
+                <a href="/export/all-author" class="btn btn-info"> 
+                    <i class="fas fa-file-csv ml-2"> 匯出CSV </i>
+                </a>
+            </p>
+            <div class="col-md-12">
+                <h2 th:case="null">未找到記錄!!</h2>
+                <div th:case="*">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>作者名稱</th>
+                                <th>描述</th>
+                                <th>編輯</th>
+                                <th>刪除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="author : ${authors}">
+                                <td th:text="${author.name}"></td>
+                                <td th:text="${author.description}"></td>
+                                <td>
+                                    <a th:href="@{/updateAuthor/{id}(id=${author.id})}" class="btn btn-warning">
+                                        <i class="fas fa-user-edit ml-2"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/remove-author/{id}(id=${author.id})}" class="btn btn-danger">
+                                        <i class="fas fa-user-times ml-2"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${authors.totalPages > 0}" class="pagination"
+                        th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/authors(size=${authors.size}, page=${pageNumber})}"
+                            th:text="${pageNumber}"
+                            th:class="${pageNumber==authors.number + 1} ? 'active'"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:insert="comman/footer :: footer"></div>
+</body>
+</html>

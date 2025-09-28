@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>所有出版社</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .card-body {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 10px;
+        }
+        table {
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-dark {
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+        .pagination a {
+            color: #007bff;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="comman/header :: header"></div>
+    <div class="container my-2">
+        <div th:switch="${publishers}" class="container my-5">
+            <p class="my-5 text-center">
+                <a href="/addPublisher" class="btn btn-dark"> <i class="fas fa-user-plus ml-2"></i> 新增出版社 </a> &nbsp;&nbsp;
+                <a href="/export/all-publisher" class="btn btn-info"> <i class="fas fa-file-csv ml-2"></i> 匯出 CSV </a>
+            </p>
+            <div class="col-md-12">
+                <h2 th:case="null" class="text-center">沒有找到記錄！！</h2>
+                <div th:case="*">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>出版社名稱</th>
+                                <th>編輯</th>
+                                <th>刪除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="publisher : ${publishers}">
+                                <td th:text="${publisher.name}"></td>
+                                <td><a th:href="@{/updatePublisher/{id}(id=${publisher.id})}" class="btn btn-warning"><i class="fas fa-user-edit ml-2"></i></a></td>
+                                <td><a th:href="@{/remove-publisher/{id}(id=${publisher.id})}" class="btn btn-danger"><i class="fas fa-user-times ml-2"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:insert="comman/footer :: footer"></div>
+</body>
+</html>
